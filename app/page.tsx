@@ -70,8 +70,50 @@ export default function ResumeBuilder() {
   const [accentColor, setAccentColor] = useState('#4f46e5');
   const [activeTab, setActiveTab] = useState('personal');
 
+  // BULLETPROOF PRINT FUNCTION: Clones ONLY the CV element and opens isolated print view
   const handlePrint = () => {
-    window.print();
+    const cvElement = document.getElementById('cv-print-area');
+    if (!cvElement) return;
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow popups to generate the PDF.');
+      return;
+    }
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${personal.name} - Resume</title>
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>
+            @page {
+              size: A4 portrait;
+              margin: 8mm;
+            }
+            body {
+              background: white;
+              font-family: ui-sans-serif, system-ui, sans-serif;
+              padding: 0;
+              margin: 0;
+            }
+          </style>
+        </head>
+        <body>
+          <div style="width: 100%; max-width: 800px; margin: 0 auto;">
+            ${cvElement.innerHTML}
+          </div>
+          <script>
+            setTimeout(() => {
+              window.print();
+              window.close();
+            }, 500);
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
   };
 
   const addExperience = () => {
@@ -93,42 +135,8 @@ export default function ResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-100 font-sans text-gray-900 flex flex-col">
       
-      {/* BULLETPROOF PRINT STYLES: HIDES EVERYTHING EXCEPT THE RESUME */}
-      <style>{`
-        @media print {
-          /* Hide the top navbar and left editor panel completely */
-          #app-header, #editor-panel {
-            display: none !important;
-          }
-          
-          body {
-            background-color: white !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-
-          @page {
-            size: A4 portrait;
-            margin: 5mm;
-          }
-
-          /* Force resume container to take full page and center */
-          #cv-print-area {
-            position: absolute !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            box-shadow: none !important;
-            border: none !important;
-            padding: 5mm !important;
-            margin: 0 !important;
-            background: white !important;
-          }
-        }
-      `}</style>
-
       {/* TOP HEADER */}
-      <header id="app-header" className="bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
+      <header className="bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
         <div className="flex items-center space-x-3">
           <div className="bg-indigo-600 font-extrabold px-2.5 py-1 rounded text-lg">CV</div>
           <span className="font-bold text-lg">FlowCV Studio Pro</span>
@@ -159,8 +167,8 @@ export default function ResumeBuilder() {
       {/* MAIN CONTAINER */}
       <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         
-        {/* LEFT SIDE: EDITOR PANEL */}
-        <div id="editor-panel" className="w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
+        {/* EDITOR PANEL */}
+        <div className="w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
           <div className="flex overflow-x-auto border-b border-gray-200 bg-slate-50 p-2 gap-1">
             {[
               { id: 'personal', name: 'Personal', icon: User },
@@ -312,11 +320,12 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        {/* RIGHT SIDE: RESUME PREVIEW CANVAS */}
+        {/* RESUME PREVIEW CANVAS */}
         <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
+          
           <div 
             id="cv-print-area"
-            className="bg-white w-full max-w-[800px] shadow-2xl p-6 text-gray-800 font-sans border border-gray-300"
+            className="bg-white w-full max-w-[800px] shadow-2xl p-8 text-gray-800 font-sans border border-gray-300"
           >
             
             <header className="border-b-2 pb-4 mb-4" style={{ borderColor: accentColor }}>
