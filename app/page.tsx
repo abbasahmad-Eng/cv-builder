@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import { 
   Printer, User, Briefcase, GraduationCap, Wrench, Globe, Award, 
-  FolderKanban, Plus, Trash2, Edit3, Sparkles, Palette 
+  FolderKanban, Plus, Trash2, Palette 
 } from 'lucide-react';
 
-export default function FullResumeBuilder() {
+export default function ResumeBuilder() {
+  // --- RESUME DATA STATE ---
   const [personal, setPersonal] = useState({
     name: 'Abbas Ahmad',
     title: 'Electronic Engineer & Software Developer',
@@ -67,10 +68,10 @@ export default function FullResumeBuilder() {
     { id: 1, title: 'SAP ERP Fundamentals', issuer: 'TMC Academy', date: '2025' }
   ]);
 
-  const [activeTemplate, setActiveTemplate] = useState('modern');
   const [accentColor, setAccentColor] = useState('#4f46e5');
   const [activeTab, setActiveTab] = useState('personal');
 
+  // Trigger Print Function
   const handlePrint = () => {
     window.print();
   };
@@ -94,36 +95,43 @@ export default function FullResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-100 font-sans text-gray-900 flex flex-col">
       
-      {/* GLOBAL PRINT STYLING INSTRUCTION FOR BROWSER */}
-      <style jsx global>{`
+      {/* FORCE PRINT RULES SO ONLY THE RESUME PREVIEW IS VISIBLE */}
+      <style>{`
         @media print {
-          @page {
-            margin: 10mm;
-            size: A4 portrait;
+          /* Hide all UI elements, top headers, and sidebars */
+          header, .no-print, nav, button, input, textarea, select {
+            display: none !important;
           }
+          
           body {
-            background: white !important;
-          }
-          body * {
-            visibility: hidden;
-          }
-          #printable-cv-area, #printable-cv-area * {
-            visibility: visible;
-          }
-          #printable-cv-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100% !important;
+            background-color: white !important;
             margin: 0 !important;
             padding: 0 !important;
+          }
+
+          /* Reset page margins */
+          @page {
+            size: A4 portrait;
+            margin: 0mm;
+          }
+
+          /* Force resume container to fit perfectly on 1 page */
+          #cv-print-area {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            min-height: 100vh !important;
             box-shadow: none !important;
             border: none !important;
+            padding: 15mm !important;
+            margin: 0 !important;
+            background: white !important;
           }
         }
       `}</style>
 
-      {/* TOP HEADER / NAVBAR */}
+      {/* TOP HEADER / NAVBAR (Hidden during Print) */}
       <header className="no-print bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
         <div className="flex items-center space-x-3">
           <div className="bg-indigo-600 font-extrabold px-2.5 py-1 rounded text-lg">CV</div>
@@ -144,7 +152,7 @@ export default function FullResumeBuilder() {
 
           <button 
             onClick={handlePrint}
-            className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold text-sm shadow-lg transition"
+            className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold text-sm shadow-lg transition cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>Print / Save PDF</span>
@@ -152,10 +160,10 @@ export default function FullResumeBuilder() {
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
+      {/* MAIN LAYOUT */}
       <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         
-        {/* LEFT SIDE: EDITOR PANEL */}
+        {/* LEFT SIDE: EDITOR PANEL (Hidden during Print) */}
         <div className="no-print w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
           <div className="flex overflow-x-auto border-b border-gray-200 bg-slate-50 p-2 gap-1">
             {[
@@ -204,6 +212,14 @@ export default function FullResumeBuilder() {
                   <div>
                     <label className="text-xs font-semibold text-gray-600">Phone</label>
                     <input type="text" value={personal.phone} onChange={(e) => setPersonal({...personal, phone: e.target.value})} className="w-full border rounded-lg p-2 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">Location</label>
+                    <input type="text" value={personal.location} onChange={(e) => setPersonal({...personal, location: e.target.value})} className="w-full border rounded-lg p-2 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">Website</label>
+                    <input type="text" value={personal.website} onChange={(e) => setPersonal({...personal, website: e.target.value})} className="w-full border rounded-lg p-2 text-sm mt-1" />
                   </div>
                 </div>
                 <div>
@@ -302,11 +318,11 @@ export default function FullResumeBuilder() {
           </div>
         </div>
 
-        {/* RIGHT SIDE: LIVE RESUME CANVAS PREVIEW */}
-        <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)] print:w-full print:p-0 print:bg-white">
+        {/* RIGHT SIDE: RESUME PREVIEW CANVAS */}
+        <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
           
           <div 
-            id="printable-cv-area"
+            id="cv-print-area"
             className="bg-white w-full max-w-[800px] min-h-[1130px] shadow-2xl p-10 text-gray-800 font-sans border border-gray-300"
           >
             
