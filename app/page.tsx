@@ -93,10 +93,11 @@ export default function ResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-100 font-sans text-gray-900 flex flex-col">
       
-      {/* STRICT PRINT RULES TO FIT EXACTLY ON 1 PAGE */}
+      {/* BULLETPROOF PRINT STYLES: HIDES EVERYTHING EXCEPT THE RESUME */}
       <style>{`
         @media print {
-          header, .no-print, nav, button, input, textarea, select {
+          /* Hide the top navbar and left editor panel completely */
+          #app-header, #editor-panel {
             display: none !important;
           }
           
@@ -111,15 +112,15 @@ export default function ResumeBuilder() {
             margin: 5mm;
           }
 
+          /* Force resume container to take full page and center */
           #cv-print-area {
             position: absolute !important;
             left: 0 !important;
             top: 0 !important;
             width: 100% !important;
-            height: 100% !important;
             box-shadow: none !important;
             border: none !important;
-            padding: 8mm !important;
+            padding: 5mm !important;
             margin: 0 !important;
             background: white !important;
           }
@@ -127,7 +128,7 @@ export default function ResumeBuilder() {
       `}</style>
 
       {/* TOP HEADER */}
-      <header className="no-print bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
+      <header id="app-header" className="bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
         <div className="flex items-center space-x-3">
           <div className="bg-indigo-600 font-extrabold px-2.5 py-1 rounded text-lg">CV</div>
           <span className="font-bold text-lg">FlowCV Studio Pro</span>
@@ -158,8 +159,8 @@ export default function ResumeBuilder() {
       {/* MAIN CONTAINER */}
       <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         
-        {/* EDITOR PANEL */}
-        <div className="no-print w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
+        {/* LEFT SIDE: EDITOR PANEL */}
+        <div id="editor-panel" className="w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
           <div className="flex overflow-x-auto border-b border-gray-200 bg-slate-50 p-2 gap-1">
             {[
               { id: 'personal', name: 'Personal', icon: User },
@@ -311,7 +312,7 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        {/* RESUME PREVIEW CANVAS (COMPACT PADDING TO FIT 1 PAGE) */}
+        {/* RIGHT SIDE: RESUME PREVIEW CANVAS */}
         <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
           <div 
             id="cv-print-area"
