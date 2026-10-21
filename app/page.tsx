@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 
 export default function ResumeBuilder() {
-  // --- RESUME DATA STATE ---
   const [personal, setPersonal] = useState({
     name: 'Abbas Ahmad',
     title: 'Electronic Engineer & Software Developer',
@@ -71,7 +70,6 @@ export default function ResumeBuilder() {
   const [accentColor, setAccentColor] = useState('#4f46e5');
   const [activeTab, setActiveTab] = useState('personal');
 
-  // Trigger Print Function
   const handlePrint = () => {
     window.print();
   };
@@ -95,10 +93,9 @@ export default function ResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-100 font-sans text-gray-900 flex flex-col">
       
-      {/* FORCE PRINT RULES SO ONLY THE RESUME PREVIEW IS VISIBLE */}
+      {/* STRICT PRINT RULES TO FIT EXACTLY ON 1 PAGE */}
       <style>{`
         @media print {
-          /* Hide all UI elements, top headers, and sidebars */
           header, .no-print, nav, button, input, textarea, select {
             display: none !important;
           }
@@ -109,29 +106,27 @@ export default function ResumeBuilder() {
             padding: 0 !important;
           }
 
-          /* Reset page margins */
           @page {
             size: A4 portrait;
-            margin: 0mm;
+            margin: 5mm;
           }
 
-          /* Force resume container to fit perfectly on 1 page */
           #cv-print-area {
             position: absolute !important;
             left: 0 !important;
             top: 0 !important;
             width: 100% !important;
-            min-height: 100vh !important;
+            height: 100% !important;
             box-shadow: none !important;
             border: none !important;
-            padding: 15mm !important;
+            padding: 8mm !important;
             margin: 0 !important;
             background: white !important;
           }
         }
       `}</style>
 
-      {/* TOP HEADER / NAVBAR (Hidden during Print) */}
+      {/* TOP HEADER */}
       <header className="no-print bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
         <div className="flex items-center space-x-3">
           <div className="bg-indigo-600 font-extrabold px-2.5 py-1 rounded text-lg">CV</div>
@@ -160,10 +155,10 @@ export default function ResumeBuilder() {
         </div>
       </header>
 
-      {/* MAIN LAYOUT */}
+      {/* MAIN CONTAINER */}
       <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         
-        {/* LEFT SIDE: EDITOR PANEL (Hidden during Print) */}
+        {/* EDITOR PANEL */}
         <div className="no-print w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
           <div className="flex overflow-x-auto border-b border-gray-200 bg-slate-50 p-2 gap-1">
             {[
@@ -192,7 +187,6 @@ export default function ResumeBuilder() {
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            
             {activeTab === 'personal' && (
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-gray-800 border-b pb-2">Personal Details</h3>
@@ -314,23 +308,21 @@ export default function ResumeBuilder() {
                 ))}
               </div>
             )}
-
           </div>
         </div>
 
-        {/* RIGHT SIDE: RESUME PREVIEW CANVAS */}
+        {/* RESUME PREVIEW CANVAS (COMPACT PADDING TO FIT 1 PAGE) */}
         <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
-          
           <div 
             id="cv-print-area"
-            className="bg-white w-full max-w-[800px] min-h-[1130px] shadow-2xl p-10 text-gray-800 font-sans border border-gray-300"
+            className="bg-white w-full max-w-[800px] shadow-2xl p-6 text-gray-800 font-sans border border-gray-300"
           >
             
-            <header className="border-b-2 pb-6 mb-6" style={{ borderColor: accentColor }}>
-              <h1 className="text-3xl font-extrabold text-gray-900">{personal.name}</h1>
-              <p className="text-base font-bold mt-1" style={{ color: accentColor }}>{personal.title}</p>
+            <header className="border-b-2 pb-4 mb-4" style={{ borderColor: accentColor }}>
+              <h1 className="text-2xl font-extrabold text-gray-900">{personal.name}</h1>
+              <p className="text-sm font-bold mt-0.5" style={{ color: accentColor }}>{personal.title}</p>
               
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 mt-3 font-medium">
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 mt-2 font-medium">
                 {personal.email && <span>📧 {personal.email}</span>}
                 {personal.phone && <span>📞 {personal.phone}</span>}
                 {personal.location && <span>📍 {personal.location}</span>}
@@ -339,24 +331,24 @@ export default function ResumeBuilder() {
             </header>
 
             {personal.summary && (
-              <section className="mb-6">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>Professional Summary</h2>
-                <p className="text-xs text-gray-700 leading-relaxed">{personal.summary}</p>
+              <section className="mb-4">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: accentColor }}>Professional Summary</h2>
+                <p className="text-xs text-gray-700 leading-normal">{personal.summary}</p>
               </section>
             )}
 
             {experience.length > 0 && (
-              <section className="mb-6">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: accentColor }}>Professional Experience</h2>
-                <div className="space-y-4">
+              <section className="mb-4">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>Professional Experience</h2>
+                <div className="space-y-3">
                   {experience.map((exp) => (
                     <div key={exp.id}>
                       <div className="flex justify-between items-baseline">
                         <h3 className="text-xs font-bold text-gray-900">{exp.role}</h3>
-                        <span className="text-[11px] font-semibold text-gray-500">{exp.date}</span>
+                        <span className="text-[10px] font-semibold text-gray-500">{exp.date}</span>
                       </div>
                       <p className="text-xs font-bold mt-0.5" style={{ color: accentColor }}>{exp.company}</p>
-                      <p className="text-xs text-gray-700 mt-1">{exp.description}</p>
+                      <p className="text-xs text-gray-700 mt-0.5">{exp.description}</p>
                     </div>
                   ))}
                 </div>
@@ -364,13 +356,13 @@ export default function ResumeBuilder() {
             )}
 
             {education.length > 0 && (
-              <section className="mb-6">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: accentColor }}>Education</h2>
+              <section className="mb-4">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>Education</h2>
                 {education.map((edu) => (
                   <div key={edu.id}>
                     <div className="flex justify-between items-baseline">
                       <h3 className="text-xs font-bold text-gray-900">{edu.degree}</h3>
-                      <span className="text-[11px] font-semibold text-gray-500">{edu.date}</span>
+                      <span className="text-[10px] font-semibold text-gray-500">{edu.date}</span>
                     </div>
                     <p className="text-xs font-semibold" style={{ color: accentColor }}>{edu.institution}</p>
                   </div>
@@ -379,11 +371,11 @@ export default function ResumeBuilder() {
             )}
 
             {skills.length > 0 && (
-              <section className="mb-6">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>Skills</h2>
-                <div className="flex flex-wrap gap-1.5">
+              <section className="mb-4">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: accentColor }}>Skills</h2>
+                <div className="flex flex-wrap gap-1">
                   {skills.map((skill) => (
-                    <span key={skill.id} className="bg-slate-100 border border-slate-200 text-slate-800 px-2.5 py-1 rounded text-[11px] font-medium">
+                    <span key={skill.id} className="bg-slate-100 border border-slate-200 text-slate-800 px-2 py-0.5 rounded text-[10px] font-medium">
                       {skill.name}
                     </span>
                   ))}
@@ -392,8 +384,8 @@ export default function ResumeBuilder() {
             )}
 
             {languages.length > 0 && (
-              <section className="mb-6">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>Languages</h2>
+              <section className="mb-4">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: accentColor }}>Languages</h2>
                 <div className="flex flex-wrap gap-4 text-xs text-gray-700">
                   {languages.map((lang) => (
                     <span key={lang.id}><strong>{lang.name}:</strong> {lang.level}</span>
@@ -403,8 +395,8 @@ export default function ResumeBuilder() {
             )}
 
             {projects.length > 0 && (
-              <section className="mb-6">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: accentColor }}>Key Projects</h2>
+              <section className="mb-4">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>Key Projects</h2>
                 {projects.map((proj) => (
                   <div key={proj.id}>
                     <h3 className="text-xs font-bold text-gray-900">{proj.title}</h3>
@@ -415,7 +407,6 @@ export default function ResumeBuilder() {
             )}
 
           </div>
-
         </div>
 
       </div>
