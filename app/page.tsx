@@ -11,9 +11,9 @@ export default function ResumeBuilder() {
     name: 'Abbas Ahmad',
     title: 'Software Engineer & AI Enthusiast',
     email: 'abbasahmadfata@gmail.com',
-    phone: '+92 345 4735550',
+    phone: '+92 300 1234567',
     location: 'Islamabad, Pakistan',
-    website: 'abbas-cv-builder.vercel.app',
+    website: 'https://github.com',
     summary: 'Driven software engineer specializing in web application development, machine learning, and data analytics.'
   });
 
@@ -57,44 +57,143 @@ export default function ResumeBuilder() {
     }
   ]);
 
+  const [certificates, setCertificates] = useState([
+    { id: 1, title: 'SAP ERP Fundamentals', issuer: 'TMC Academy', date: '2025' }
+  ]);
+
   const [accentColor, setAccentColor] = useState('#4f46e5');
   const [activeTab, setActiveTab] = useState('personal');
 
-  // DYNAMIC BULLETPROOF PRINT FUNCTION: Generates PDF using your live inputs
+  // CLEAN PRINT ENGINE FUNCTION
   const handlePrint = () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      alert('Please allow popups to generate the PDF.');
-      return;
-    }
+    const printFrame = document.createElement('iframe');
+    printFrame.style.position = 'fixed';
+    printFrame.style.right = '0';
+    printFrame.style.bottom = '0';
+    printFrame.style.width = '0';
+    printFrame.style.height = '0';
+    printFrame.style.border = '0';
+
+    document.body.appendChild(printFrame);
+
+    const frameDoc = printFrame.contentWindow?.document;
+    if (!frameDoc) return;
 
     const htmlContent = `
       <!DOCTYPE html>
       <html>
         <head>
           <title>${personal.name} - Resume</title>
-          <script src="https://cdn.tailwindcss.com"></script>
           <style>
             @page {
               size: A4 portrait;
-              margin: 10mm;
+              margin: 12mm;
             }
             body {
-              background: white;
-              font-family: ui-sans-serif, system-ui, sans-serif;
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
               color: #111827;
-              padding: 10px;
               margin: 0;
+              padding: 0;
+              background: #ffffff;
+            }
+            .cv-container {
+              width: 100%;
+              box-sizing: border-box;
+            }
+            .cv-header {
+              border-bottom: 2px solid ${accentColor};
+              padding-bottom: 12px;
+              margin-bottom: 16px;
+            }
+            .cv-title {
+              font-size: 26px;
+              font-weight: 800;
+              margin: 0;
+              color: #111827;
+            }
+            .cv-subtitle {
+              font-size: 14px;
+              font-weight: 700;
+              color: ${accentColor};
+              margin: 4px 0 8px 0;
+            }
+            .cv-contact {
+              font-size: 11px;
+              color: #4b5563;
+              display: flex;
+              flex-wrap: wrap;
+              gap: 12px;
+            }
+            .cv-section {
+              margin-bottom: 14px;
+            }
+            .cv-section-title {
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              color: ${accentColor};
+              margin-bottom: 6px;
+              border-bottom: 1px solid #f3f4f6;
+              padding-bottom: 2px;
+            }
+            .cv-text {
+              font-size: 11.5px;
+              color: #374151;
+              line-height: 1.4;
+              margin: 0;
+            }
+            .item-row {
+              display: flex;
+              justify-content: space-between;
+              align-items: baseline;
+            }
+            .item-title {
+              font-size: 12px;
+              font-weight: 700;
+              color: #111827;
+              margin: 0;
+            }
+            .item-date {
+              font-size: 10.5px;
+              font-weight: 600;
+              color: #6b7280;
+            }
+            .item-sub {
+              font-size: 11.5px;
+              font-weight: 600;
+              color: ${accentColor};
+              margin: 2px 0;
+            }
+            .skill-pill {
+              display: inline-block;
+              background: #f3f4f6;
+              border: 1px solid #e5e7eb;
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-size: 10.5px;
+              font-weight: 500;
+              color: #1f2937;
+              margin-right: 4px;
+              margin-bottom: 4px;
+            }
+            .declaration-box {
+              margin-top: 20px;
+              border-top: 1px solid #e5e7eb;
+              padding-top: 10px;
+              text-align: center;
+              font-size: 10.5px;
+              color: #6b7280;
+              font-style: italic;
             }
           </style>
         </head>
         <body>
-          <div style="max-width: 800px; margin: 0 auto;">
-            <!-- Header -->
-            <div style="border-bottom: 2px solid ${accentColor}; padding-bottom: 16px; margin-bottom: 16px;">
-              <h1 style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">${personal.name}</h1>
-              <p style="font-size: 15px; font-weight: 700; color: ${accentColor}; margin: 4px 0 10px 0;">${personal.title}</p>
-              <div style="font-size: 12px; color: #4b5563; display: flex; flex-wrap: wrap; gap: 12px;">
+          <div class="cv-container">
+            <div class="cv-header">
+              <h1 class="cv-title">${personal.name}</h1>
+              <div class="cv-subtitle">${personal.title}</div>
+              <div class="cv-contact">
                 ${personal.email ? `<span>📧 ${personal.email}</span>` : ''}
                 ${personal.phone ? `<span>📞 ${personal.phone}</span>` : ''}
                 ${personal.location ? `<span>📍 ${personal.location}</span>` : ''}
@@ -102,102 +201,94 @@ export default function ResumeBuilder() {
               </div>
             </div>
 
-            <!-- Summary -->
             ${personal.summary ? `
-              <div style="margin-bottom: 16px;">
-                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 4px;">Professional Summary</h2>
-                <p style="font-size: 12px; color: #374151; line-height: 1.5; margin: 0;">${personal.summary}</p>
+              <div class="cv-section">
+                <div class="cv-section-title">Professional Summary</div>
+                <p class="cv-text">${personal.summary}</p>
               </div>
             ` : ''}
 
-            <!-- Experience -->
             ${experience.length > 0 ? `
-              <div style="margin-bottom: 16px;">
-                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 8px;">Professional Experience</h2>
+              <div class="cv-section">
+                <div class="cv-section-title">Professional Experience</div>
                 ${experience.map(exp => `
-                  <div style="margin-bottom: 10px;">
-                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                      <h3 style="font-size: 12px; font-weight: 700; color: #111827; margin: 0;">${exp.role}</h3>
-                      <span style="font-size: 11px; font-weight: 600; color: #6b7280;">${exp.date}</span>
+                  <div style="margin-bottom: 8px;">
+                    <div class="item-row">
+                      <h3 class="item-title">${exp.role}</h3>
+                      <span class="item-date">${exp.date}</span>
                     </div>
-                    <p style="font-size: 12px; font-weight: 700; color: ${accentColor}; margin: 2px 0;">${exp.company}</p>
-                    <p style="font-size: 12px; color: #374151; margin: 2px 0 0 0;">${exp.description}</p>
+                    <div class="item-sub">${exp.company}</div>
+                    <p class="cv-text">${exp.description}</p>
                   </div>
                 `).join('')}
               </div>
             ` : ''}
 
-            <!-- Education -->
             ${education.length > 0 ? `
-              <div style="margin-bottom: 16px;">
-                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 8px;">Education</h2>
+              <div class="cv-section">
+                <div class="cv-section-title">Education</div>
                 ${education.map(edu => `
-                  <div style="margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                      <h3 style="font-size: 12px; font-weight: 700; color: #111827; margin: 0;">${edu.degree}</h3>
-                      <span style="font-size: 11px; font-weight: 600; color: #6b7280;">${edu.date}</span>
+                  <div style="margin-bottom: 6px;">
+                    <div class="item-row">
+                      <h3 class="item-title">${edu.degree}</h3>
+                      <span class="item-date">${edu.date}</span>
                     </div>
-                    <p style="font-size: 12px; font-weight: 600; color: ${accentColor}; margin: 2px 0;">${edu.institution}</p>
-                    ${edu.details ? `<p style="font-size: 12px; color: #4b5563; margin: 2px 0 0 0;">${edu.details}</p>` : ''}
+                    <div class="item-sub">${edu.institution}</div>
+                    ${edu.details ? `<p class="cv-text">${edu.details}</p>` : ''}
                   </div>
                 `).join('')}
               </div>
             ` : ''}
 
-            <!-- Skills -->
             ${skills.length > 0 ? `
-              <div style="margin-bottom: 16px;">
-                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 6px;">Skills</h2>
-                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                  ${skills.map(skill => `
-                    <span style="background: #f3f4f6; border: 1px solid #e5e7eb; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; color: #1f2937;">${skill.name}</span>
-                  `).join('')}
+              <div class="cv-section">
+                <div class="cv-section-title">Skills</div>
+                <div>
+                  ${skills.map(s => `<span class="skill-pill">${s.name}</span>`).join('')}
                 </div>
               </div>
             ` : ''}
 
-            <!-- Languages -->
             ${languages.length > 0 ? `
-              <div style="margin-bottom: 16px;">
-                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 6px;">Languages</h2>
-                <div style="display: flex; gap: 16px; font-size: 12px; color: #374151;">
-                  ${languages.map(lang => `<span><strong>${lang.name}:</strong> ${lang.level}</span>`).join('')}
+              <div class="cv-section">
+                <div class="cv-section-title">Languages</div>
+                <div class="cv-text">
+                  ${languages.map(l => `<span><strong>${l.name}:</strong> ${l.level}</span>`).join('&nbsp;&nbsp;•&nbsp;&nbsp;')}
                 </div>
               </div>
             ` : ''}
 
-            <!-- Projects -->
             ${projects.length > 0 ? `
-              <div style="margin-bottom: 16px;">
-                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 8px;">Key Projects</h2>
-                ${projects.map(proj => `
-                  <div style="margin-bottom: 8px;">
-                    <h3 style="font-size: 12px; font-weight: 700; color: #111827; margin: 0;">${proj.title}</h3>
-                    <p style="font-size: 12px; color: #374151; margin: 2px 0 0 0;">${proj.description}</p>
+              <div class="cv-section">
+                <div class="cv-section-title">Key Projects</div>
+                ${projects.map(p => `
+                  <div style="margin-bottom: 6px;">
+                    <h3 class="item-title">${p.title}</h3>
+                    <p class="cv-text">${p.description}</p>
                   </div>
                 `).join('')}
               </div>
             ` : ''}
 
-            <!-- Declaration -->
-            <div style="margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; text-align: center;">
-              <p style="font-size: 11px; color: #6b7280; font-style: italic; margin: 0;">
-                I hereby declare that all the information provided above is true and accurate to the best of my knowledge.
-              </p>
+            <div class="declaration-box">
+              I hereby declare that all the information provided above is true and accurate to the best of my knowledge.
             </div>
           </div>
-          <script>
-            setTimeout(() => {
-              window.print();
-              window.close();
-            }, 600);
-          </script>
         </body>
       </html>
     `;
 
-    printWindow.document.write(htmlContent);
-    printWindow.document.close();
+    frameDoc.open();
+    frameDoc.write(htmlContent);
+    frameDoc.close();
+
+    setTimeout(() => {
+      printFrame.contentWindow?.focus();
+      printFrame.contentWindow?.print();
+      setTimeout(() => {
+        document.body.removeChild(printFrame);
+      }, 1000);
+    }, 300);
   };
 
   const addExperience = () => {
@@ -395,11 +486,9 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        {/* LIVE RESUME PREVIEW CANVAS */}
+        {/* LIVE CANVAS PREVIEW */}
         <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
-          <div 
-            className="bg-white w-full max-w-[800px] shadow-2xl p-8 text-gray-800 font-sans border border-gray-300"
-          >
+          <div className="bg-white w-full max-w-[800px] shadow-2xl p-8 text-gray-800 font-sans border border-gray-300">
             
             <header className="border-b-2 pb-4 mb-4" style={{ borderColor: accentColor }}>
               <h1 className="text-2xl font-extrabold text-gray-900">{personal.name}</h1>
@@ -489,6 +578,10 @@ export default function ResumeBuilder() {
                 ))}
               </section>
             )}
+
+            <div className="mt-6 border-t pt-3 text-center text-[10.5px] text-gray-500 italic">
+              I hereby declare that all the information provided above is true and accurate to the best of my knowledge.
+            </div>
 
           </div>
         </div>
