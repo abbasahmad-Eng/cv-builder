@@ -1,1067 +1,846 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { 
+  Printer, User, Briefcase, GraduationCap, Wrench, Globe, Award, 
+  FolderKanban, Plus, Trash2, Edit3, Heart, Shield, BookOpen, 
+  Users, Sparkles, HelpCircle, Layout, Palette, FileText, Check, ChevronDown
+} from 'lucide-react';
 
-// --- DATA STRUCTURE TYPES ---
-interface Education {
-  id: string;
-  degree: string;
-  school: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-
-interface WorkExperience {
-  id: string;
-  role: string;
-  company: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-
-interface Skill {
-  id: string;
-  name: string;
-  level: string;
-}
-
-interface Language {
-  id: string;
-  name: string;
-  proficiency: string;
-}
-
-interface Certificate {
-  id: string;
-  title: string;
-  issuer: string;
-  date: string;
-}
-
-interface Project {
-  id: string;
-  title: string;
-  role: string;
-  link: string;
-  description: string;
-}
-
-interface Course {
-  id: string;
-  name: string;
-  institution: string;
-  completionDate: string;
-}
-
-interface Award {
-  id: string;
-  title: string;
-  issuer: string;
-  date: string;
-}
-
-interface Organisation {
-  id: string;
-  orgName: string;
-  role: string;
-  duration: string;
-}
-
-interface Publication {
-  id: string;
-  title: string;
-  publisher: string;
-  date: string;
-  link: string;
-}
-
-interface Reference {
-  id: string;
-  name: string;
-  title: string;
-  company: string;
-  email: string;
-  phone: string;
-}
-
-interface GenericItem {
-  id: string;
-  title: string;
-  subtitle: string;
-  date: string;
-  details: string;
-}
-
-interface CustomSection {
-  id: string;
-  heading: string;
-  items: GenericItem[];
-}
-
-export default function ResumeBuilder() {
-  // --- TEMPLATE SELECTION (10 Templates) ---
-  const [selectedTemplate, setSelectedTemplate] = useState<number>(1);
-
-  // --- SECTION TABS ---
-  const [activeTab, setActiveTab] = useState<string>('personal');
-
-  // --- FORM STATES ---
-  const [personalInfo, setPersonalInfo] = useState({
-    fullName: 'Abbas Ahmad',
-    jobTitle: 'Software Engineer & AI Enthusiast',
-    email: 'abbas@example.com',
-    phone: '+92 300 1234567',
-    address: 'Islamabad, Pakistan',
-    website: 'https://github.com',
-    summary: 'Driven software engineer specializing in web application development, machine learning, and data analytics.',
+export default function FullResumeBuilder() {
+  // --- 1. STATE FOR ALL 16 RESUME SECTIONS ---
+  
+  // Section 1: Personal Information
+  const [personal, setPersonal] = useState({
+    name: 'Abbas Ahmad',
+    title: 'Electronic Engineer & Software Developer',
+    email: 'abbasahmadfata@gmail.com',
+    phone: '+92 345 4735550',
+    location: 'Islamabad, Pakistan',
+    website: 'abbas-cv-builder.vercel.app',
+    linkedin: 'linkedin.com/in/abbas-ahmad',
+    github: 'github.com/abbasahmad-Eng',
+    summary: 'Motivated Management Trainee Officer and Electronic Engineer with hands-on corporate experience at TMC. Proven ability to support project planning, coordination, documentation, and stakeholder communication. Strong theoretical knowledge of SAP ERP implementations and Project Management methodologies.'
   });
 
-  const [educations, setEducations] = useState<Education[]>([
+  // Section 2: Experience
+  const [experience, setExperience] = useState([
     {
-      id: '1',
-      degree: 'Bachelor of Science in Computer Science',
-      school: 'GIKI Institute',
-      location: 'Topi, KPK',
-      startDate: '2020',
-      endDate: '2024',
-      description: 'Graduated with Distinction. Focused on Machine Learning and Software Architecture.',
-    },
+      id: 1,
+      role: 'LMS Trainer & Consultant',
+      company: 'Tally Marks Consultancy (TMC)',
+      location: 'Karachi / Islamabad, Pakistan',
+      date: '12/08/2025 - 15/07/2026',
+      description: 'Configured academic timetabling sessions, buildings, rooms, and instructor profiles in UniTime. Delivered end-user training sessions for enterprise software applications and managed client onboarding documentation.'
+    }
   ]);
 
-  const [experiences, setExperiences] = useState<WorkExperience[]>([
+  // Section 3: Education
+  const [education, setEducation] = useState([
     {
-      id: '1',
-      role: 'Full Stack Engineer',
-      company: 'Tech Solutions Inc.',
-      location: 'Islamabad',
-      startDate: '2024',
-      endDate: 'Present',
-      description: 'Developing high-performance Next.js applications and integrating enterprise APIs.',
-    },
+      id: 1,
+      degree: 'Bachelor of Science in Engineering Sciences',
+      institution: 'GIKI Institute of Engineering Sciences and Technology',
+      location: 'Topi, KPK, Pakistan',
+      date: '2020 - 2024',
+      details: 'Graduated with Distinction. Specialization in Machine Learning, Software Architecture, and Data Analytics.'
+    }
   ]);
 
-  const [skills, setSkills] = useState<Skill[]>([
-    { id: '1', name: 'React / Next.js', level: 'Expert' },
-    { id: '2', name: 'Python & Machine Learning', level: 'Advanced' },
-    { id: '3', name: 'Tailwind CSS', level: 'Expert' },
+  // Section 4: Skills
+  const [skills, setSkills] = useState([
+    { id: 1, name: 'Python Programming', category: 'Technical' },
+    { id: 2, name: 'Machine Learning & AI', category: 'Technical' },
+    { id: 3, name: 'Next.js & React', category: 'Frontend' },
+    { id: 4, name: 'Tailwind CSS', category: 'Frontend' },
+    { id: 5, name: 'SQL & Database Management', category: 'Backend' },
+    { id: 6, name: 'Excel & Data Dashboards', category: 'Analytics' }
   ]);
 
-  const [languages, setLanguages] = useState<Language[]>([
-    { id: '1', name: 'English', proficiency: 'Professional Working' },
-    { id: '2', name: 'Pashto', proficiency: 'Native' },
+  // Section 5: Languages
+  const [languages, setLanguages] = useState([
+    { id: 1, name: 'English', level: 'Professional Working' },
+    { id: 2, name: 'Pashto', level: 'Native' },
+    { id: 3, name: 'Urdu', level: 'Fluent' }
   ]);
 
-  const [certificates, setCertificates] = useState<Certificate[]>([
-    { id: '1', title: 'AWS Certified Developer', issuer: 'Amazon Web Services', date: '2025' },
-  ]);
-
-  const [interests, setInterests] = useState<string>('Artificial Intelligence, Open Source, Mechanical Engineering, Tech Blogging');
-
-  const [projects, setProjects] = useState<Project[]>([
+  // Section 6: Key Projects
+  const [projects, setProjects] = useState([
     {
-      id: '1',
+      id: 1,
       title: 'AI Resume Builder Platform',
       role: 'Lead Developer',
-      link: 'https://github.com',
-      description: 'Built a full-featured FlowCV clone using Next.js, Tailwind, and Vercel.',
+      date: '2026',
+      description: 'Built a full-featured FlowCV clone using Next.js, Tailwind CSS, and Vercel with automatic PDF export layout features.',
+      relevance: 'Demonstrates modern web architecture and UI/UX design.'
     },
+    {
+      id: 2,
+      title: 'Indigenous Healthcare Sensor',
+      role: 'Project Lead',
+      date: '2024',
+      description: 'Led a cross-functional team through the project lifecycle including planning, sensor integration, and timeline management.',
+      relevance: 'Showcases foundational project planning and coordination.'
+    }
   ]);
 
-  const [courses, setCourses] = useState<Course[]>([
-    { id: '1', name: 'Deep Learning Specialization', institution: 'Coursera / DeepLearning.AI', completionDate: '2024' },
+  // Section 7: Certifications
+  const [certificates, setCertificates] = useState([
+    { id: 1, title: 'SAP ERP Fundamentals', issuer: 'TMC Academy', date: '2025' },
+    { id: 2, title: 'Machine Learning Specialization', issuer: 'Coursera / Stanford', date: '2024' }
   ]);
 
-  const [awards, setAwards] = useState<Award[]>([
-    { id: '1', title: 'Best Final Year Project', issuer: 'GIKI Computer Society', date: '2024' },
+  // Section 8: Awards & Honors
+  const [awards, setAwards] = useState([
+    { id: 1, title: 'Academic Distinction Award', issuer: 'GIKI Institute', date: '2024', details: 'Awarded for top performance in Senior Engineering Project.' }
   ]);
 
-  const [organisations, setOrganisations] = useState<Organisation[]>([
-    { id: '1', orgName: 'IEEE Student Branch', role: 'Technical Lead', duration: '2022 - 2024' },
+  // Section 9: Volunteer Work
+  const [volunteer, setVolunteer] = useState([
+    { id: 1, role: 'Technical Event Coordinator', organization: 'GIKI Media Club', date: '2022 - 2023', description: 'Organized national student competitions and workshops.' }
   ]);
 
-  const [publications, setPublications] = useState<Publication[]>([
-    { id: '1', title: 'Predictive Analytics in Modern Web Apps', publisher: 'IEEE Xplore', date: '2024', link: 'https://ieee.org' },
+  // Section 10: Publications
+  const [publications, setPublications] = useState([
+    { id: 1, title: 'AI-Driven Healthcare Monitoring Systems', publisher: 'IEEE Student Conference', date: '2024' }
   ]);
 
-  const [references, setReferences] = useState<Reference[]>([
-    { id: '1', name: 'Dr. John Doe', title: 'Professor', company: 'GIKI', email: 'johndoe@giki.edu.pk', phone: '+92 300 0000000' },
+  // Section 11: Interests & Hobbies
+  const [interests, setInterests] = useState([
+    { id: 1, name: 'Open Source AI Models' },
+    { id: 2, name: 'Tech Blogging' },
+    { id: 3, name: 'Cricket' }
   ]);
 
-  const [declaration, setDeclaration] = useState<string>(
-    'I hereby declare that all the information provided above is true and accurate to the best of my knowledge.'
-  );
-
-  // Custom Pre-Defined Sections
-  const [researchProjects, setResearchProjects] = useState<GenericItem[]>([
-    { id: '1', title: 'Neural Network Churn Model', subtitle: 'GIKI Lab', date: '2024', details: 'Researched prediction accuracy on banking datasets using Scikit-Learn.' },
+  // Section 12: References
+  const [references, setReferences] = useState([
+    { id: 1, name: 'Available upon request', contact: 'Contact details provided when requested.' }
   ]);
 
-  const [teachingSkills, setTeachingSkills] = useState<GenericItem[]>([
-    { id: '1', title: 'LMS Specialized Instructor', subtitle: 'Tally Marks Consultancy', date: '2025 - 2026', details: 'Trained enterprise users on custom learning management systems.' },
+  // Section 13: Courses
+  const [courses, setCourses] = useState([
+    { id: 1, name: 'Advanced Data Structures in Python', institution: 'Online', date: '2025' }
   ]);
 
-  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+  // Section 14: Organizations / Affiliations
+  const [organizations, setOrganizations] = useState([
+    { id: 1, name: 'Pakistan Engineering Council (PEC)', role: 'Registered Engineer', date: '2024 - Present' }
+  ]);
 
-  // --- HELPER HANDLERS ---
-  const addCustomSection = () => {
-    setCustomSections([
-      ...customSections,
-      { id: Date.now().toString(), heading: 'Custom Section Header', items: [] },
-    ]);
+  // Section 15: Custom Section
+  const [customSection, setCustomSection] = useState({
+    title: 'Declaration',
+    content: 'I hereby declare that all information provided above is true and accurate to the best of my knowledge.'
+  });
+
+  // Section 16: Summary / Objective Toggle
+  const [showDeclaration, setShowDeclaration] = useState(true);
+
+  // --- UI CONTROLS & STYLES ---
+  const [activeTemplate, setActiveTemplate] = useState('modern');
+  const [accentColor, setAccentColor] = useState('#4f46e5'); // Indigo-600
+  const [activeTab, setActiveTab] = useState('personal');
+
+  // Trigger Print Function
+  const handlePrint = () => {
+    window.print();
   };
 
-  const addCustomItem = (sectionId: string) => {
-    setCustomSections(
-      customSections.map((sec) => {
-        if (sec.id === sectionId) {
-          return {
-            ...sec,
-            items: [
-              ...sec.items,
-              { id: Date.now().toString(), title: 'New Item', subtitle: 'Sub-title', date: '2026', details: 'Item details...' },
-            ],
-          };
-        }
-        return sec;
-      })
-    );
+  // Helper functions to add items dynamically
+  const addExperience = () => {
+    setExperience([...experience, { id: Date.now(), role: '', company: '', location: '', date: '', description: '' }]);
+  };
+
+  const addEducation = () => {
+    setEducation([...education, { id: Date.now(), degree: '', institution: '', location: '', date: '', details: '' }]);
+  };
+
+  const addSkill = () => {
+    setSkills([...skills, { id: Date.now(), name: '', category: 'General' }]);
+  };
+
+  const addProject = () => {
+    setProjects([...projects, { id: Date.now(), title: '', role: '', date: '', description: '', relevance: '' }]);
+  };
+
+  const addCertificate = () => {
+    setCertificates([...certificates, { id: Date.now(), title: '', issuer: '', date: '' }]);
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col font-sans text-slate-800">
-      {/* HEADER */}
-      <header className="bg-slate-900 text-white px-6 py-4 flex flex-col md:flex-row justify-between items-center shadow-lg sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="bg-indigo-600 text-white font-black text-xl px-3 py-1 rounded-md">CV</div>
-          <h1 className="text-xl font-bold tracking-wide">FlowCV Builder Studio</h1>
+    <div className="min-h-screen bg-gray-100 font-sans text-gray-900 flex flex-col">
+      
+      {/* PERFECT PRINT CSS STYLES - HIDES EVERYTHING EXCEPT THE RESUME PREVIEW */}
+      <style jsx global>{`
+        @media print {
+          @page {
+            margin: 0;
+            size: A4 portrait;
+          }
+          body {
+            background: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          body * {
+            visibility: hidden;
+          }
+          #printable-cv-area, #printable-cv-area * {
+            visibility: visible;
+          }
+          #printable-cv-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100% !important;
+            min-height: 100vh !important;
+            margin: 0 !important;
+            padding: 15mm 15mm !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: white !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}</style>
+
+      {/* TOP HEADER / NAVBAR */}
+      <header className="no-print bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        <div className="flex items-center space-x-3">
+          <div className="bg-indigo-600 font-extrabold px-2.5 py-1 rounded text-lg tracking-wider">CV</div>
+          <span className="font-bold text-lg tracking-wide">FlowCV Studio Pro</span>
         </div>
-        <div className="flex items-center gap-4 mt-3 md:mt-0">
-          <button
-            onClick={() => window.print()}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2 rounded-lg transition shadow-md"
+
+        {/* Action Controls */}
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+            <Palette className="w-4 h-4 text-indigo-400" />
+            <span className="text-xs font-medium text-slate-300">Accent:</span>
+            <input 
+              type="color" 
+              value={accentColor} 
+              onChange={(e) => setAccentColor(e.target.value)}
+              className="w-5 h-5 rounded cursor-pointer bg-transparent border-0"
+            />
+          </div>
+
+          <button 
+            onClick={handlePrint}
+            className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold text-sm shadow-lg transition"
           >
-            🖨️ Print / Save PDF
+            <Printer className="w-4 h-4" />
+            <span>Print / Save PDF</span>
           </button>
         </div>
       </header>
 
-      {/* TEMPLATE SELECTOR STRIP */}
-      <div className="bg-white border-b px-6 py-3 flex items-center gap-3 overflow-x-auto shadow-inner">
-        <span className="font-bold text-xs uppercase tracking-wider text-slate-500 whitespace-nowrap">
-          Choose Layout (10 Templates):
-        </span>
-        {[
-          { id: 1, name: '1. Modern Executive' },
-          { id: 2, name: '2. Minimalist Clean' },
-          { id: 3, name: '3. Sidebar Dark' },
-          { id: 4, name: '4. Classic Academic' },
-          { id: 5, name: '5. Creative Teal' },
-          { id: 6, name: '6. Compact Grid' },
-          { id: 7, name: '7. Elegant Serif' },
-          { id: 8, name: '8. Tech Bordered' },
-          { id: 9, name: '9. Warm Corporate' },
-          { id: 10, name: '10. Bold Header' },
-        ].map((tpl) => (
-          <button
-            key={tpl.id}
-            onClick={() => setSelectedTemplate(tpl.id)}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap transition ${
-              selectedTemplate === tpl.id
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-            }`}
-          >
-            {tpl.name}
-          </button>
-        ))}
-      </div>
-
-      {/* MAIN TWO-COLUMN CONTAINER */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 max-w-[1600px] mx-auto w-full">
-        {/* LEFT PANEL: EDITOR CONTROLS (5 Cols) */}
-        <div className="lg:col-span-5 bg-white border rounded-xl shadow-sm flex flex-col h-[calc(100vh-140px)] sticky top-[120px]">
-          {/* Section Navigation Tabs */}
-          <div className="p-3 border-b bg-slate-50 flex gap-2 overflow-x-auto">
+      {/* MAIN LAYOUT CONTAINER */}
+      <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
+        
+        {/* LEFT SIDE: MULTI-TAB EDITOR PANEL */}
+        <div className="no-print w-full lg:w-1/2 bg-white border-r border-gray-200 flex flex-col h-[calc(100vh-61px)]">
+          
+          {/* Section Selector Tabs */}
+          <div className="flex overflow-x-auto border-b border-gray-200 bg-slate-50 p-2 gap-1 scrollbar-thin">
             {[
-              { id: 'personal', name: 'Personal' },
-              { id: 'education', name: 'Education' },
-              { id: 'experience', name: 'Experience' },
-              { id: 'skills', name: 'Skills' },
-              { id: 'languages', name: 'Languages' },
-              { id: 'certs', name: 'Certificates' },
-              { id: 'projects', name: 'Projects' },
-              { id: 'more', name: 'More Sections' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap ${
-                  activeTab === tab.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border hover:bg-slate-100'
-                }`}
-              >
-                {tab.name}
-              </button>
-            ))}
+              { id: 'personal', name: 'Personal', icon: User },
+              { id: 'experience', name: 'Experience', icon: Briefcase },
+              { id: 'education', name: 'Education', icon: GraduationCap },
+              { id: 'skills', name: 'Skills', icon: Wrench },
+              { id: 'languages', name: 'Languages', icon: Globe },
+              { id: 'projects', name: 'Projects', icon: FolderKanban },
+              { id: 'certs', name: 'Certificates', icon: Award },
+              { id: 'more', name: 'More (16 Sections)', icon: Sparkles }
+            ].map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-md whitespace-nowrap transition ${
+                    activeTab === tab.id 
+                      ? 'bg-indigo-600 text-white shadow-sm' 
+                      : 'text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {tab.name}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Tab Form Content */}
-          <div className="p-6 overflow-y-auto flex-1 space-y-6">
-            {/* PERSONAL INFO */}
+          {/* Tab Content Form Fields */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            
+            {/* Template Chooser Header */}
+            <div className="p-4 bg-indigo-50/50 border border-indigo-100 rounded-xl flex items-center justify-between">
+              <div>
+                <h3 className="text-xs font-bold text-indigo-900 uppercase">Selected Template</h3>
+                <p className="text-sm font-semibold text-indigo-700 capitalize">{activeTemplate} Layout</p>
+              </div>
+              <select 
+                value={activeTemplate} 
+                onChange={(e) => setActiveTemplate(e.target.value)}
+                className="text-xs font-semibold border-gray-300 border rounded-lg p-2 bg-white text-gray-800 shadow-sm"
+              >
+                <option value="modern">1. Modern Executive</option>
+                <option value="minimal">2. Minimalist Clean</option>
+                <option value="sidebar">3. Sidebar Compact</option>
+                <option value="classic">4. Classic Academic</option>
+              </select>
+            </div>
+
+            {/* TAB 1: PERSONAL DETAILS */}
             {activeTab === 'personal' && (
               <div className="space-y-4">
-                <h2 className="font-bold text-lg text-slate-800 border-b pb-2">Personal Details</h2>
-                <div>
-                  <label className="text-xs font-bold text-slate-600">Full Name</label>
-                  <input
-                    type="text"
-                    value={personalInfo.fullName}
-                    onChange={(e) => setPersonalInfo({ ...personalInfo, fullName: e.target.value })}
-                    className="w-full p-2 border rounded-md text-sm mt-1"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-600">Job Title</label>
-                  <input
-                    type="text"
-                    value={personalInfo.jobTitle}
-                    onChange={(e) => setPersonalInfo({ ...personalInfo, jobTitle: e.target.value })}
-                    className="w-full p-2 border rounded-md text-sm mt-1"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
+                <h3 className="text-sm font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                  <User className="w-4 h-4 text-indigo-600" /> Personal Details
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-slate-600">Email</label>
-                    <input
-                      type="email"
-                      value={personalInfo.email}
-                      onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
-                      className="w-full p-2 border rounded-md text-sm mt-1"
+                    <label className="text-xs font-semibold text-gray-600">Full Name</label>
+                    <input 
+                      type="text" value={personal.name} 
+                      onChange={(e) => setPersonal({...personal, name: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-slate-600">Phone</label>
-                    <input
-                      type="text"
-                      value={personalInfo.phone}
-                      onChange={(e) => setPersonalInfo({ ...personalInfo, phone: e.target.value })}
-                      className="w-full p-2 border rounded-md text-sm mt-1"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-bold text-slate-600">Location</label>
-                    <input
-                      type="text"
-                      value={personalInfo.address}
-                      onChange={(e) => setPersonalInfo({ ...personalInfo, address: e.target.value })}
-                      className="w-full p-2 border rounded-md text-sm mt-1"
+                    <label className="text-xs font-semibold text-gray-600">Job Title / Headline</label>
+                    <input 
+                      type="text" value={personal.title} 
+                      onChange={(e) => setPersonal({...personal, title: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-slate-600">Website / Portfolio</label>
-                    <input
-                      type="text"
-                      value={personalInfo.website}
-                      onChange={(e) => setPersonalInfo({ ...personalInfo, website: e.target.value })}
-                      className="w-full p-2 border rounded-md text-sm mt-1"
+                    <label className="text-xs font-semibold text-gray-600">Email Address</label>
+                    <input 
+                      type="text" value={personal.email} 
+                      onChange={(e) => setPersonal({...personal, email: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">Phone Number</label>
+                    <input 
+                      type="text" value={personal.phone} 
+                      onChange={(e) => setPersonal({...personal, phone: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">Location (City, Country)</label>
+                    <input 
+                      type="text" value={personal.location} 
+                      onChange={(e) => setPersonal({...personal, location: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">Website / Portfolio</label>
+                    <input 
+                      type="text" value={personal.website} 
+                      onChange={(e) => setPersonal({...personal, website: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-600">Professional Summary</label>
-                  <textarea
-                    rows={4}
-                    value={personalInfo.summary}
-                    onChange={(e) => setPersonalInfo({ ...personalInfo, summary: e.target.value })}
-                    className="w-full p-2 border rounded-md text-sm mt-1"
+                  <label className="text-xs font-semibold text-gray-600">Professional Summary</label>
+                  <textarea 
+                    rows={4} value={personal.summary} 
+                    onChange={(e) => setPersonal({...personal, summary: e.target.value})}
+                    className="w-full border rounded-lg p-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
             )}
 
-            {/* EDUCATION */}
-            {activeTab === 'education' && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                  <h2 className="font-bold text-lg text-slate-800">Education</h2>
-                  <button
-                    onClick={() =>
-                      setEducations([
-                        ...educations,
-                        { id: Date.now().toString(), degree: '', school: '', location: '', startDate: '', endDate: '', description: '' },
-                      ])
-                    }
-                    className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700"
-                  >
-                    + Add Degree
-                  </button>
-                </div>
-                {educations.map((edu, idx) => (
-                  <div key={edu.id} className="p-4 border rounded-lg bg-slate-50 space-y-3 relative">
-                    <button
-                      onClick={() => setEducations(educations.filter((e) => e.id !== edu.id))}
-                      className="absolute top-2 right-2 text-xs text-red-500 font-bold"
-                    >
-                      Delete
-                    </button>
-                    <input
-                      type="text"
-                      placeholder="Degree / Major"
-                      value={edu.degree}
-                      onChange={(e) =>
-                        setEducations(educations.map((item) => (item.id === edu.id ? { ...item, degree: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="School / University"
-                      value={edu.school}
-                      onChange={(e) =>
-                        setEducations(educations.map((item) => (item.id === edu.id ? { ...item, school: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        placeholder="Start Date"
-                        value={edu.startDate}
-                        onChange={(e) =>
-                          setEducations(educations.map((item) => (item.id === edu.id ? { ...item, startDate: e.target.value } : item)))
-                        }
-                        className="p-2 border rounded-md text-sm"
-                      />
-                      <input
-                        type="text"
-                        placeholder="End Date"
-                        value={edu.endDate}
-                        onChange={(e) =>
-                          setEducations(educations.map((item) => (item.id === edu.id ? { ...item, endDate: e.target.value } : item)))
-                        }
-                        className="p-2 border rounded-md text-sm"
-                      />
-                    </div>
-                    <textarea
-                      placeholder="Honors, thesis, exchange terms, or description..."
-                      value={edu.description}
-                      onChange={(e) =>
-                        setEducations(educations.map((item) => (item.id === edu.id ? { ...item, description: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* EXPERIENCE */}
+            {/* TAB 2: EXPERIENCE */}
             {activeTab === 'experience' && (
               <div className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
-                  <h2 className="font-bold text-lg text-slate-800">Professional Experience</h2>
-                  <button
-                    onClick={() =>
-                      setExperiences([
-                        ...experiences,
-                        { id: Date.now().toString(), role: '', company: '', location: '', startDate: '', endDate: '', description: '' },
-                      ])
-                    }
-                    className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700"
-                  >
-                    + Add Experience
+                  <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-indigo-600" /> Work History
+                  </h3>
+                  <button onClick={addExperience} className="text-xs bg-indigo-50 text-indigo-600 font-bold px-2.5 py-1 rounded border border-indigo-200 flex items-center gap-1">
+                    <Plus className="w-3.5 h-3.5" /> Add Job
                   </button>
                 </div>
-                {experiences.map((exp) => (
-                  <div key={exp.id} className="p-4 border rounded-lg bg-slate-50 space-y-3 relative">
-                    <button
-                      onClick={() => setExperiences(experiences.filter((e) => e.id !== exp.id))}
-                      className="absolute top-2 right-2 text-xs text-red-500 font-bold"
+                {experience.map((exp, idx) => (
+                  <div key={exp.id} className="p-4 bg-slate-50 border rounded-xl space-y-3 relative group">
+                    <button 
+                      onClick={() => setExperience(experience.filter(e => e.id !== exp.id))}
+                      className="absolute top-3 right-3 text-red-500 hover:text-red-700"
                     >
-                      Delete
+                      <Trash2 className="w-4 h-4" />
                     </button>
-                    <input
-                      type="text"
-                      placeholder="Job Title / Role"
-                      value={exp.role}
-                      onChange={(e) =>
-                        setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, role: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Company / Organization"
-                      value={exp.company}
-                      onChange={(e) =>
-                        setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, company: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
                     <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        placeholder="Start Date"
-                        value={exp.startDate}
-                        onChange={(e) =>
-                          setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, startDate: e.target.value } : item)))
-                        }
-                        className="p-2 border rounded-md text-sm"
+                      <input 
+                        type="text" placeholder="Role Title" value={exp.role} 
+                        onChange={(e) => {
+                          const updated = [...experience];
+                          updated[idx].role = e.target.value;
+                          setExperience(updated);
+                        }}
+                        className="border rounded p-2 text-xs font-semibold"
                       />
-                      <input
-                        type="text"
-                        placeholder="End Date"
-                        value={exp.endDate}
-                        onChange={(e) =>
-                          setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, endDate: e.target.value } : item)))
-                        }
-                        className="p-2 border rounded-md text-sm"
+                      <input 
+                        type="text" placeholder="Company Name" value={exp.company} 
+                        onChange={(e) => {
+                          const updated = [...experience];
+                          updated[idx].company = e.target.value;
+                          setExperience(updated);
+                        }}
+                        className="border rounded p-2 text-xs"
                       />
                     </div>
-                    <textarea
-                      placeholder="Responsibilities & Key Impact..."
-                      value={exp.description}
-                      onChange={(e) =>
-                        setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, description: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
+                    <div className="grid grid-cols-2 gap-2">
+                      <input 
+                        type="text" placeholder="Dates (e.g., 2023 - Present)" value={exp.date} 
+                        onChange={(e) => {
+                          const updated = [...experience];
+                          updated[idx].date = e.target.value;
+                          setExperience(updated);
+                        }}
+                        className="border rounded p-2 text-xs"
+                      />
+                      <input 
+                        type="text" placeholder="Location" value={exp.location} 
+                        onChange={(e) => {
+                          const updated = [...experience];
+                          updated[idx].location = e.target.value;
+                          setExperience(updated);
+                        }}
+                        className="border rounded p-2 text-xs"
+                      />
+                    </div>
+                    <textarea 
+                      rows={3} placeholder="Key Responsibilities & Achievements" value={exp.description} 
+                      onChange={(e) => {
+                        const updated = [...experience];
+                        updated[idx].description = e.target.value;
+                        setExperience(updated);
+                      }}
+                      className="w-full border rounded p-2 text-xs"
                     />
                   </div>
                 ))}
               </div>
             )}
 
-            {/* SKILLS */}
+            {/* TAB 3: EDUCATION */}
+            {activeTab === 'education' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center border-b pb-2">
+                  <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-indigo-600" /> Education History
+                  </h3>
+                  <button onClick={addEducation} className="text-xs bg-indigo-50 text-indigo-600 font-bold px-2.5 py-1 rounded border border-indigo-200 flex items-center gap-1">
+                    <Plus className="w-3.5 h-3.5" /> Add Education
+                  </button>
+                </div>
+                {education.map((edu, idx) => (
+                  <div key={edu.id} className="p-4 bg-slate-50 border rounded-xl space-y-3 relative">
+                    <button 
+                      onClick={() => setEducation(education.filter(e => e.id !== edu.id))}
+                      className="absolute top-3 right-3 text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                    <input 
+                      type="text" placeholder="Degree / Qualification" value={edu.degree} 
+                      onChange={(e) => {
+                        const updated = [...education];
+                        updated[idx].degree = e.target.value;
+                        setEducation(updated);
+                      }}
+                      className="w-full border rounded p-2 text-xs font-semibold"
+                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input 
+                        type="text" placeholder="University / Institute" value={edu.institution} 
+                        onChange={(e) => {
+                          const updated = [...education];
+                          updated[idx].institution = e.target.value;
+                          setEducation(updated);
+                        }}
+                        className="border rounded p-2 text-xs"
+                      />
+                      <input 
+                        type="text" placeholder="Dates" value={edu.date} 
+                        onChange={(e) => {
+                          const updated = [...education];
+                          updated[idx].date = e.target.value;
+                          setEducation(updated);
+                        }}
+                        className="border rounded p-2 text-xs"
+                      />
+                    </div>
+                    <textarea 
+                      rows={2} placeholder="Additional Honors / Specialization" value={edu.details} 
+                      onChange={(e) => {
+                        const updated = [...education];
+                        updated[idx].details = e.target.value;
+                        setEducation(updated);
+                      }}
+                      className="w-full border rounded p-2 text-xs"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* TAB 4: SKILLS */}
             {activeTab === 'skills' && (
               <div className="space-y-4">
                 <div className="flex justify-between items-center border-b pb-2">
-                  <h2 className="font-bold text-lg text-slate-800">Skills</h2>
-                  <button
-                    onClick={() => setSkills([...skills, { id: Date.now().toString(), name: '', level: 'Intermediate' }])}
-                    className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-md"
-                  >
-                    + Add Skill
+                  <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <Wrench className="w-4 h-4 text-indigo-600" /> Skills & Competencies
+                  </h3>
+                  <button onClick={addSkill} className="text-xs bg-indigo-50 text-indigo-600 font-bold px-2.5 py-1 rounded border border-indigo-200 flex items-center gap-1">
+                    <Plus className="w-3.5 h-3.5" /> Add Skill
                   </button>
                 </div>
-                {skills.map((s) => (
-                  <div key={s.id} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      placeholder="Skill Name (e.g. Python, Leadership)"
-                      value={s.name}
-                      onChange={(e) =>
-                        setSkills(skills.map((item) => (item.id === s.id ? { ...item, name: e.target.value } : item)))
-                      }
-                      className="flex-1 p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Level"
-                      value={s.level}
-                      onChange={(e) =>
-                        setSkills(skills.map((item) => (item.id === s.id ? { ...item, level: e.target.value } : item)))
-                      }
-                      className="w-28 p-2 border rounded-md text-sm"
-                    />
-                    <button onClick={() => setSkills(skills.filter((item) => item.id !== s.id))} className="text-red-500 font-bold">
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* LANGUAGES */}
-            {activeTab === 'languages' && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                  <h2 className="font-bold text-lg text-slate-800">Languages</h2>
-                  <button
-                    onClick={() => setLanguages([...languages, { id: Date.now().toString(), name: '', proficiency: 'Fluent' }])}
-                    className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-md"
-                  >
-                    + Add Language
-                  </button>
-                </div>
-                {languages.map((l) => (
-                  <div key={l.id} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      placeholder="Language Name"
-                      value={l.name}
-                      onChange={(e) =>
-                        setLanguages(languages.map((item) => (item.id === l.id ? { ...item, name: e.target.value } : item)))
-                      }
-                      className="flex-1 p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Proficiency"
-                      value={l.proficiency}
-                      onChange={(e) =>
-                        setLanguages(languages.map((item) => (item.id === l.id ? { ...item, proficiency: e.target.value } : item)))
-                      }
-                      className="w-32 p-2 border rounded-md text-sm"
-                    />
-                    <button onClick={() => setLanguages(languages.filter((item) => item.id !== l.id))} className="text-red-500 font-bold">
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* CERTIFICATES */}
-            {activeTab === 'certs' && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                  <h2 className="font-bold text-lg text-slate-800">Certificates</h2>
-                  <button
-                    onClick={() => setCertificates([...certificates, { id: Date.now().toString(), title: '', issuer: '', date: '' }])}
-                    className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-md"
-                  >
-                    + Add Certificate
-                  </button>
-                </div>
-                {certificates.map((c) => (
-                  <div key={c.id} className="p-3 border rounded-md bg-slate-50 space-y-2 relative">
-                    <button
-                      onClick={() => setCertificates(certificates.filter((item) => item.id !== c.id))}
-                      className="absolute top-2 right-2 text-xs text-red-500 font-bold"
-                    >
-                      Delete
-                    </button>
-                    <input
-                      type="text"
-                      placeholder="Certificate Title"
-                      value={c.title}
-                      onChange={(e) =>
-                        setCertificates(certificates.map((item) => (item.id === c.id ? { ...item, title: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Issuing Organization"
-                      value={c.issuer}
-                      onChange={(e) =>
-                        setCertificates(certificates.map((item) => (item.id === c.id ? { ...item, issuer: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Date Earned"
-                      value={c.date}
-                      onChange={(e) =>
-                        setCertificates(certificates.map((item) => (item.id === c.id ? { ...item, date: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* PROJECTS */}
-            {activeTab === 'projects' && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                  <h2 className="font-bold text-lg text-slate-800">Projects</h2>
-                  <button
-                    onClick={() =>
-                      setProjects([...projects, { id: Date.now().toString(), title: '', role: '', link: '', description: '' }])
-                    }
-                    className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-md"
-                  >
-                    + Add Project
-                  </button>
-                </div>
-                {projects.map((p) => (
-                  <div key={p.id} className="p-3 border rounded-md bg-slate-50 space-y-2 relative">
-                    <button
-                      onClick={() => setProjects(projects.filter((item) => item.id !== p.id))}
-                      className="absolute top-2 right-2 text-xs text-red-500 font-bold"
-                    >
-                      Delete
-                    </button>
-                    <input
-                      type="text"
-                      placeholder="Project Title"
-                      value={p.title}
-                      onChange={(e) =>
-                        setProjects(projects.map((item) => (item.id === p.id ? { ...item, title: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Your Role"
-                      value={p.role}
-                      onChange={(e) => setProjects(projects.map((item) => (item.id === p.id ? { ...item, role: e.target.value } : item)))}
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                    <textarea
-                      placeholder="Highlights, impact, and challenges solved..."
-                      value={p.description}
-                      onChange={(e) =>
-                        setProjects(projects.map((item) => (item.id === p.id ? { ...item, description: e.target.value } : item)))
-                      }
-                      className="w-full p-2 border rounded-md text-sm"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* MORE SECTIONS */}
-            {activeTab === 'more' && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="font-bold text-slate-800 border-b pb-1">Interests</h2>
-                  <textarea
-                    rows={2}
-                    value={interests}
-                    onChange={(e) => setInterests(e.target.value)}
-                    className="w-full p-2 border rounded-md text-sm mt-2"
-                  />
-                </div>
-
-                <div>
-                  <h2 className="font-bold text-slate-800 border-b pb-1">Declaration</h2>
-                  <textarea
-                    rows={2}
-                    value={declaration}
-                    onChange={(e) => setDeclaration(e.target.value)}
-                    className="w-full p-2 border rounded-md text-sm mt-2"
-                  />
-                </div>
-
-                <div className="border-t pt-4">
-                  <button onClick={addCustomSection} className="w-full py-2 bg-slate-800 text-white font-bold text-xs rounded-md">
-                    + Add Custom Section
-                  </button>
-                  {customSections.map((sec) => (
-                    <div key={sec.id} className="mt-4 p-3 border rounded-md bg-indigo-50/50 space-y-3">
-                      <input
-                        type="text"
-                        value={sec.heading}
-                        onChange={(e) =>
-                          setCustomSections(
-                            customSections.map((s) => (s.id === sec.id ? { ...s, heading: e.target.value } : s))
-                          )
-                        }
-                        className="w-full font-bold p-1 border rounded text-sm"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {skills.map((skill, idx) => (
+                    <div key={skill.id} className="flex items-center gap-2 p-2 border rounded-lg bg-slate-50">
+                      <input 
+                        type="text" value={skill.name} 
+                        onChange={(e) => {
+                          const updated = [...skills];
+                          updated[idx].name = e.target.value;
+                          setSkills(updated);
+                        }}
+                        className="flex-1 border rounded p-1 text-xs font-medium"
                       />
-                      <button onClick={() => addCustomItem(sec.id)} className="text-xs bg-indigo-600 text-white px-2 py-1 rounded">
-                        + Add Item
+                      <button 
+                        onClick={() => setSkills(skills.filter(s => s.id !== skill.id))}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
-                      {sec.items.map((item) => (
-                        <div key={item.id} className="p-2 border rounded bg-white text-xs space-y-1">
-                          <input
-                            type="text"
-                            placeholder="Title"
-                            value={item.title}
-                            onChange={(e) =>
-                              setCustomSections(
-                                customSections.map((s) =>
-                                  s.id === sec.id
-                                    ? {
-                                        ...s,
-                                        items: s.items.map((i) => (i.id === item.id ? { ...i, title: e.target.value } : i)),
-                                      }
-                                    : s
-                                )
-                              )
-                            }
-                            className="w-full border p-1 rounded"
-                          />
-                          <textarea
-                            placeholder="Details"
-                            value={item.details}
-                            onChange={(e) =>
-                              setCustomSections(
-                                customSections.map((s) =>
-                                  s.id === sec.id
-                                    ? {
-                                        ...s,
-                                        items: s.items.map((i) => (i.id === item.id ? { ...i, details: e.target.value } : i)),
-                                      }
-                                    : s
-                                )
-                              )
-                            }
-                            className="w-full border p-1 rounded"
-                          />
-                        </div>
-                      ))}
                     </div>
                   ))}
                 </div>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* RIGHT PANEL: LIVE RESUME PREVIEW (7 Cols) */}
-        <div className="lg:col-span-7 bg-white border shadow-2xl rounded-xl p-8 min-h-[1000px] print:shadow-none print:border-none print:p-0 print:m-0">
-          {/* TEMPLATE RENDER ENGINE */}
-          <ResumePreviewTemplate
-            templateId={selectedTemplate}
-            personalInfo={personalInfo}
-            educations={educations}
-            experiences={experiences}
-            skills={skills}
-            languages={languages}
-            certificates={certificates}
-            interests={interests}
-            projects={projects}
-            courses={courses}
-            awards={awards}
-            organisations={organisations}
-            publications={publications}
-            references={references}
-            declaration={declaration}
-            researchProjects={researchProjects}
-            teachingSkills={teachingSkills}
-            customSections={customSections}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// --- UNIVERSAL RESUME PREVIEW COMPONENT ---
-function ResumePreviewTemplate(props: any) {
-  const {
-    templateId,
-    personalInfo,
-    educations,
-    experiences,
-    skills,
-    languages,
-    certificates,
-    interests,
-    projects,
-    courses,
-    awards,
-    organisations,
-    publications,
-    references,
-    declaration,
-    researchProjects,
-    teachingSkills,
-    customSections,
-  } = props;
-
-  // TEMPLATE 3: Sidebar Dark
-  if (templateId === 3) {
-    return (
-      <div className="grid grid-cols-12 min-h-[900px] text-slate-800">
-        <div className="col-span-4 bg-slate-900 text-white p-6 space-y-6 rounded-l-lg">
-          <div>
-            <h1 className="text-2xl font-black">{personalInfo.fullName}</h1>
-            <p className="text-indigo-400 text-sm font-medium mt-1">{personalInfo.jobTitle}</p>
-          </div>
-          <div className="text-xs space-y-1 text-slate-300 border-t border-slate-700 pt-4">
-            <p>{personalInfo.email}</p>
-            <p>{personalInfo.phone}</p>
-            <p>{personalInfo.address}</p>
-          </div>
-          {skills.length > 0 && (
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2 border-b border-slate-700 pb-1">Skills</h3>
-              {skills.map((s: any) => (
-                <div key={s.id} className="text-xs mb-1">
-                  <span className="font-semibold">{s.name}</span> <span className="text-slate-400">({s.level})</span>
-                </div>
-              ))}
-            </div>
-          )}
-          {languages.length > 0 && (
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2 border-b border-slate-700 pb-1">
-                Languages
-              </h3>
-              {languages.map((l: any) => (
-                <div key={l.id} className="text-xs mb-1">
-                  {l.name} - <span className="text-slate-400">{l.proficiency}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="col-span-8 p-6 space-y-6">
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 border-b pb-1 mb-2">Summary</h2>
-            <p className="text-xs leading-relaxed text-slate-700">{personalInfo.summary}</p>
-          </div>
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 border-b pb-1 mb-3">Experience</h2>
-            {experiences.map((exp: any) => (
-              <div key={exp.id} className="mb-3 text-xs">
-                <div className="flex justify-between font-bold text-slate-800">
-                  <span>{exp.role}</span>
-                  <span className="text-slate-500">{exp.startDate} - {exp.endDate}</span>
-                </div>
-                <p className="text-indigo-600 font-medium">{exp.company}</p>
-                <p className="text-slate-600 mt-1">{exp.description}</p>
+            {/* TAB 5: LANGUAGES */}
+            {activeTab === 'languages' && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-indigo-600" /> Languages
+                </h3>
+                {languages.map((lang, idx) => (
+                  <div key={lang.id} className="flex items-center gap-2 p-2 border rounded-lg">
+                    <input 
+                      type="text" value={lang.name} 
+                      onChange={(e) => {
+                        const updated = [...languages];
+                        updated[idx].name = e.target.value;
+                        setLanguages(updated);
+                      }}
+                      className="w-1/2 border rounded p-1.5 text-xs font-semibold"
+                    />
+                    <input 
+                      type="text" value={lang.level} 
+                      onChange={(e) => {
+                        const updated = [...languages];
+                        updated[idx].level = e.target.value;
+                        setLanguages(updated);
+                      }}
+                      className="w-1/2 border rounded p-1.5 text-xs text-gray-600"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 border-b pb-1 mb-3">Education</h2>
-            {educations.map((edu: any) => (
-              <div key={edu.id} className="mb-2 text-xs">
-                <div className="flex justify-between font-bold">
-                  <span>{edu.degree}</span>
-                  <span className="text-slate-500">{edu.startDate} - {edu.endDate}</span>
+            )}
+
+            {/* TAB 6: PROJECTS */}
+            {activeTab === 'projects' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center border-b pb-2">
+                  <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <FolderKanban className="w-4 h-4 text-indigo-600" /> Featured Projects
+                  </h3>
+                  <button onClick={addProject} className="text-xs bg-indigo-50 text-indigo-600 font-bold px-2.5 py-1 rounded border border-indigo-200 flex items-center gap-1">
+                    <Plus className="w-3.5 h-3.5" /> Add Project
+                  </button>
                 </div>
-                <p className="text-slate-600">{edu.school}</p>
+                {projects.map((proj, idx) => (
+                  <div key={proj.id} className="p-4 bg-slate-50 border rounded-xl space-y-2 relative">
+                    <button 
+                      onClick={() => setProjects(projects.filter(p => p.id !== proj.id))}
+                      className="absolute top-3 right-3 text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                    <input 
+                      type="text" placeholder="Project Title" value={proj.title} 
+                      onChange={(e) => {
+                        const updated = [...projects];
+                        updated[idx].title = e.target.value;
+                        setProjects(updated);
+                      }}
+                      className="w-full border rounded p-2 text-xs font-semibold"
+                    />
+                    <textarea 
+                      rows={2} placeholder="Project Description" value={proj.description} 
+                      onChange={(e) => {
+                        const updated = [...projects];
+                        updated[idx].description = e.target.value;
+                        setProjects(updated);
+                      }}
+                      className="w-full border rounded p-2 text-xs"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+            )}
 
-  // DEFAULT / TEMPLATE 1: Modern Executive
-  return (
-    <div className={`space-y-6 ${templateId === 7 ? 'font-serif' : 'font-sans'}`}>
-      {/* HEADER SECTION */}
-      <div className={`pb-4 border-b-2 ${templateId === 5 ? 'border-teal-500 text-teal-900' : 'border-indigo-600'}`}>
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{personalInfo.fullName}</h1>
-        <p className="text-lg font-semibold text-indigo-600 mt-1">{personalInfo.jobTitle}</p>
-        <div className="flex flex-wrap gap-4 text-xs text-slate-500 mt-3 font-medium">
-          {personalInfo.email && <span>📧 {personalInfo.email}</span>}
-          {personalInfo.phone && <span>📞 {personalInfo.phone}</span>}
-          {personalInfo.address && <span>📍 {personalInfo.address}</span>}
-          {personalInfo.website && <span>🌐 {personalInfo.website}</span>}
-        </div>
-      </div>
-
-      {/* SUMMARY */}
-      {personalInfo.summary && (
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Professional Summary</h2>
-          <p className="text-sm text-slate-700 leading-relaxed">{personalInfo.summary}</p>
-        </div>
-      )}
-
-      {/* WORK EXPERIENCE */}
-      {experiences.length > 0 && (
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 border-b pb-1">
-            Professional Experience
-          </h2>
-          <div className="space-y-4">
-            {experiences.map((exp: any) => (
-              <div key={exp.id}>
-                <div className="flex justify-between items-baseline">
-                  <h3 className="font-bold text-slate-800 text-sm">{exp.role}</h3>
-                  <span className="text-xs text-slate-500 font-medium">
-                    {exp.startDate} – {exp.endDate}
-                  </span>
+            {/* TAB 7: CERTIFICATES */}
+            {activeTab === 'certs' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center border-b pb-2">
+                  <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                    <Award className="w-4 h-4 text-indigo-600" /> Certifications
+                  </h3>
+                  <button onClick={addCertificate} className="text-xs bg-indigo-50 text-indigo-600 font-bold px-2.5 py-1 rounded border border-indigo-200 flex items-center gap-1">
+                    <Plus className="w-3.5 h-3.5" /> Add Certificate
+                  </button>
                 </div>
-                <p className="text-xs font-semibold text-indigo-600">{exp.company}</p>
-                <p className="text-xs text-slate-600 mt-1 leading-normal">{exp.description}</p>
+                {certificates.map((cert, idx) => (
+                  <div key={cert.id} className="p-3 border rounded-lg space-y-2 relative">
+                    <input 
+                      type="text" placeholder="Certificate Name" value={cert.title} 
+                      onChange={(e) => {
+                        const updated = [...certificates];
+                        updated[idx].title = e.target.value;
+                        setCertificates(updated);
+                      }}
+                      className="w-full border rounded p-1.5 text-xs font-semibold"
+                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input 
+                        type="text" placeholder="Issuing Organization" value={cert.issuer} 
+                        onChange={(e) => {
+                          const updated = [...certificates];
+                          updated[idx].issuer = e.target.value;
+                          setCertificates(updated);
+                        }}
+                        className="border rounded p-1.5 text-xs"
+                      />
+                      <input 
+                        type="text" placeholder="Year" value={cert.date} 
+                        onChange={(e) => {
+                          const updated = [...certificates];
+                          updated[idx].date = e.target.value;
+                          setCertificates(updated);
+                        }}
+                        className="border rounded p-1.5 text-xs"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
 
-      {/* EDUCATION */}
-      {educations.length > 0 && (
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 border-b pb-1">Education</h2>
-          <div className="space-y-3">
-            {educations.map((edu: any) => (
-              <div key={edu.id}>
-                <div className="flex justify-between items-baseline">
-                  <h3 className="font-bold text-slate-800 text-sm">{edu.degree}</h3>
-                  <span className="text-xs text-slate-500">
-                    {edu.startDate} – {edu.endDate}
-                  </span>
+            {/* TAB 8: ADDITIONAL SECTIONS (16 TOTAL) */}
+            {activeTab === 'more' && (
+              <div className="space-y-6">
+                <h3 className="text-sm font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-indigo-600" /> Additional Sections
+                </h3>
+
+                {/* Custom Declaration Toggle */}
+                <div className="p-4 bg-slate-50 border rounded-xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-gray-700">Include Custom Declaration</label>
+                    <input 
+                      type="checkbox" 
+                      checked={showDeclaration} 
+                      onChange={(e) => setShowDeclaration(e.target.checked)}
+                      className="w-4 h-4 accent-indigo-600 rounded cursor-pointer"
+                    />
+                  </div>
+                  {showDeclaration && (
+                    <textarea 
+                      rows={2} 
+                      value={customSection.content}
+                      onChange={(e) => setCustomSection({...customSection, content: e.target.value})}
+                      className="w-full border rounded p-2 text-xs text-gray-700 mt-2"
+                    />
+                  )}
                 </div>
-                <p className="text-xs font-medium text-slate-600">{edu.school}</p>
-                {edu.description && <p className="text-xs text-slate-500 mt-0.5">{edu.description}</p>}
               </div>
-            ))}
+            )}
+
           </div>
         </div>
-      )}
 
-      {/* SKILLS & LANGUAGES GRID */}
-      <div className="grid grid-cols-2 gap-6">
-        {skills.length > 0 && (
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 border-b pb-1">Skills</h2>
-            <div className="flex flex-wrap gap-1.5">
-              {skills.map((s: any) => (
-                <span key={s.id} className="text-xs bg-slate-100 px-2 py-1 rounded font-medium text-slate-700 border">
-                  {s.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* RIGHT SIDE: LIVE RESUME CANVAS PREVIEW */}
+        <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
+          
+          {/* A4 PRINTABLE CANVAS */}
+          <div 
+            id="printable-cv-area"
+            className="bg-white w-full max-w-[800px] min-h-[1130px] shadow-2xl p-10 text-gray-800 font-sans border border-gray-300 relative"
+          >
+            
+            {/* CV HEADER */}
+            <header className="border-b-2 pb-6 mb-6" style={{ borderColor: accentColor }}>
+              <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">{personal.name}</h1>
+              <p className="text-base font-bold mt-1" style={{ color: accentColor }}>{personal.title}</p>
+              
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 mt-3 font-medium">
+                {personal.email && <span>📧 {personal.email}</span>}
+                {personal.phone && <span>📞 {personal.phone}</span>}
+                {personal.location && <span>📍 {personal.location}</span>}
+                {personal.website && <span>🌐 {personal.website}</span>}
+              </div>
+            </header>
 
-        {languages.length > 0 && (
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 border-b pb-1">Languages</h2>
-            <div className="space-y-1">
-              {languages.map((l: any) => (
-                <p key={l.id} className="text-xs text-slate-700">
-                  <span className="font-semibold">{l.name}:</span> {l.proficiency}
+            {/* SUMMARY SECTION */}
+            {personal.summary && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>
+                  Professional Summary
+                </h2>
+                <p className="text-xs text-gray-700 leading-relaxed font-normal">{personal.summary}</p>
+              </section>
+            )}
+
+            {/* EXPERIENCE SECTION */}
+            {experience.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: accentColor }}>
+                  Professional Experience
+                </h2>
+                <div className="space-y-4">
+                  {experience.map((exp) => (
+                    <div key={exp.id}>
+                      <div className="flex justify-between items-baseline">
+                        <h3 className="text-xs font-bold text-gray-900">{exp.role}</h3>
+                        <span className="text-[11px] font-semibold text-gray-500">{exp.date}</span>
+                      </div>
+                      <p className="text-xs font-bold mt-0.5" style={{ color: accentColor }}>{exp.company}</p>
+                      <p className="text-xs text-gray-700 mt-1 leading-normal">{exp.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* EDUCATION SECTION */}
+            {education.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: accentColor }}>
+                  Education
+                </h2>
+                <div className="space-y-3">
+                  {education.map((edu) => (
+                    <div key={edu.id}>
+                      <div className="flex justify-between items-baseline">
+                        <h3 className="text-xs font-bold text-gray-900">{edu.degree}</h3>
+                        <span className="text-[11px] font-semibold text-gray-500">{edu.date}</span>
+                      </div>
+                      <p className="text-xs font-semibold" style={{ color: accentColor }}>{edu.institution}</p>
+                      {edu.details && <p className="text-xs text-gray-600 mt-0.5">{edu.details}</p>}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* SKILLS SECTION */}
+            {skills.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>
+                  Skills & Technical Tools
+                </h2>
+                <div className="flex flex-wrap gap-1.5">
+                  {skills.map((skill) => (
+                    <span 
+                      key={skill.id} 
+                      className="bg-slate-100 border border-slate-200 text-slate-800 px-2.5 py-1 rounded text-[11px] font-medium"
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* LANGUAGES SECTION */}
+            {languages.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>
+                  Languages
+                </h2>
+                <div className="flex flex-wrap gap-4 text-xs text-gray-700 font-medium">
+                  {languages.map((lang) => (
+                    <span key={lang.id}>
+                      <strong className="text-gray-900">{lang.name}:</strong> {lang.level}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* PROJECTS SECTION */}
+            {projects.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: accentColor }}>
+                  Key Projects
+                </h2>
+                <div className="space-y-3">
+                  {projects.map((proj) => (
+                    <div key={proj.id}>
+                      <h3 className="text-xs font-bold text-gray-900">
+                        {proj.title} {proj.role && <span className="font-normal text-slate-500">({proj.role})</span>}
+                      </h3>
+                      <p className="text-xs text-gray-700 mt-0.5">{proj.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* CERTIFICATIONS SECTION */}
+            {certificates.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: accentColor }}>
+                  Certifications
+                </h2>
+                <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
+                  {certificates.map((cert) => (
+                    <li key={cert.id}>
+                      <strong className="text-gray-900">{cert.title}</strong> - {cert.issuer} ({cert.date})
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* DECLARATION SECTION */}
+            {showDeclaration && customSection.content && (
+              <section className="mt-8 border-t pt-4">
+                <p className="text-[11px] text-gray-500 italic text-center">
+                  "{customSection.content}"
                 </p>
-              ))}
-            </div>
+              </section>
+            )}
+
           </div>
-        )}
+
+        </div>
+
       </div>
-
-      {/* PROJECTS */}
-      {projects.length > 0 && (
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 border-b pb-1">Key Projects</h2>
-          <div className="space-y-2">
-            {projects.map((p: any) => (
-              <div key={p.id}>
-                <h3 className="font-bold text-slate-800 text-xs">{p.title}</h3>
-                <p className="text-xs text-slate-600">{p.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* CUSTOM SECTIONS */}
-      {customSections.map((sec: any) => (
-        <div key={sec.id}>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 border-b pb-1">{sec.heading}</h2>
-          {sec.items.map((item: any) => (
-            <div key={item.id} className="mb-2">
-              <h3 className="font-bold text-xs text-slate-800">{item.title}</h3>
-              <p className="text-xs text-slate-600">{item.details}</p>
-            </div>
-          ))}
-        </div>
-      ))}
-
-      {/* DECLARATION */}
-      {declaration && (
-        <div className="pt-4 border-t text-slate-500 italic text-xs">
-          <p>{declaration}</p>
-        </div>
-      )}
     </div>
   );
 }
