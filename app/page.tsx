@@ -64,7 +64,7 @@ export default function ResumeBuilder() {
   const [accentColor, setAccentColor] = useState('#4f46e5');
   const [activeTab, setActiveTab] = useState('personal');
 
-  // CLEAN PRINT ENGINE FUNCTION
+  // ISOLATED PRINT ENGINE: Prints ONLY the CV with your live typed data
   const handlePrint = () => {
     const printFrame = document.createElement('iframe');
     printFrame.style.position = 'fixed';
@@ -87,7 +87,7 @@ export default function ResumeBuilder() {
           <style>
             @page {
               size: A4 portrait;
-              margin: 12mm;
+              margin: 10mm;
             }
             body {
               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -103,7 +103,7 @@ export default function ResumeBuilder() {
             .cv-header {
               border-bottom: 2px solid ${accentColor};
               padding-bottom: 12px;
-              margin-bottom: 16px;
+              margin-bottom: 14px;
             }
             .cv-title {
               font-size: 26px;
@@ -115,7 +115,7 @@ export default function ResumeBuilder() {
               font-size: 14px;
               font-weight: 700;
               color: ${accentColor};
-              margin: 4px 0 8px 0;
+              margin: 4px 0 6px 0;
             }
             .cv-contact {
               font-size: 11px;
@@ -125,7 +125,7 @@ export default function ResumeBuilder() {
               gap: 12px;
             }
             .cv-section {
-              margin-bottom: 14px;
+              margin-bottom: 12px;
             }
             .cv-section-title {
               font-size: 11px;
@@ -133,12 +133,12 @@ export default function ResumeBuilder() {
               text-transform: uppercase;
               letter-spacing: 0.05em;
               color: ${accentColor};
-              margin-bottom: 6px;
+              margin-bottom: 5px;
               border-bottom: 1px solid #f3f4f6;
               padding-bottom: 2px;
             }
             .cv-text {
-              font-size: 11.5px;
+              font-size: 11px;
               color: #374151;
               line-height: 1.4;
               margin: 0;
@@ -149,7 +149,7 @@ export default function ResumeBuilder() {
               align-items: baseline;
             }
             .item-title {
-              font-size: 12px;
+              font-size: 11.5px;
               font-weight: 700;
               color: #111827;
               margin: 0;
@@ -160,29 +160,29 @@ export default function ResumeBuilder() {
               color: #6b7280;
             }
             .item-sub {
-              font-size: 11.5px;
+              font-size: 11px;
               font-weight: 600;
               color: ${accentColor};
-              margin: 2px 0;
+              margin: 1px 0;
             }
             .skill-pill {
               display: inline-block;
               background: #f3f4f6;
               border: 1px solid #e5e7eb;
-              padding: 2px 8px;
+              padding: 2px 6px;
               border-radius: 4px;
-              font-size: 10.5px;
+              font-size: 10px;
               font-weight: 500;
               color: #1f2937;
               margin-right: 4px;
               margin-bottom: 4px;
             }
             .declaration-box {
-              margin-top: 20px;
+              margin-top: 16px;
               border-top: 1px solid #e5e7eb;
-              padding-top: 10px;
+              padding-top: 8px;
               text-align: center;
-              font-size: 10.5px;
+              font-size: 10px;
               color: #6b7280;
               font-style: italic;
             }
@@ -212,7 +212,7 @@ export default function ResumeBuilder() {
               <div class="cv-section">
                 <div class="cv-section-title">Professional Experience</div>
                 ${experience.map(exp => `
-                  <div style="margin-bottom: 8px;">
+                  <div style="margin-bottom: 6px;">
                     <div class="item-row">
                       <h3 class="item-title">${exp.role}</h3>
                       <span class="item-date">${exp.date}</span>
@@ -288,7 +288,7 @@ export default function ResumeBuilder() {
       setTimeout(() => {
         document.body.removeChild(printFrame);
       }, 1000);
-    }, 300);
+    }, 400);
   };
 
   const addExperience = () => {
@@ -304,7 +304,7 @@ export default function ResumeBuilder() {
   };
 
   const addProject = () => {
-    setProjects([...projects, { id: Date.now(), title: '', role: '', description: '' }]);
+    setProjects([...projects, { id: Date.now(), title: '', description: '' }]);
   };
 
   return (
