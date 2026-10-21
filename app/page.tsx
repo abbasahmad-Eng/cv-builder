@@ -9,49 +9,43 @@ import {
 export default function ResumeBuilder() {
   const [personal, setPersonal] = useState({
     name: 'Abbas Ahmad',
-    title: 'Electronic Engineer & Software Developer',
+    title: 'Software Engineer & AI Enthusiast',
     email: 'abbasahmadfata@gmail.com',
     phone: '+92 345 4735550',
     location: 'Islamabad, Pakistan',
     website: 'abbas-cv-builder.vercel.app',
-    summary: 'Motivated Management Trainee Officer and Electronic Engineer with hands-on corporate experience at TMC. Proven ability to support project planning, coordination, documentation, and stakeholder communication.'
+    summary: 'Driven software engineer specializing in web application development, machine learning, and data analytics.'
   });
 
   const [experience, setExperience] = useState([
     {
       id: 1,
-      role: 'LMS Trainer & Consultant',
-      company: 'Tally Marks Consultancy (TMC)',
-      location: 'Karachi / Islamabad, Pakistan',
-      date: '12/08/2025 - 15/07/2026',
-      description: 'Configured academic timetabling sessions, buildings, rooms, and instructor profiles in UniTime. Delivered end-user training sessions for enterprise software applications and managed client onboarding documentation.'
+      role: 'Full Stack Engineer',
+      company: 'Tech Solutions Inc.',
+      date: '2024 – Present',
+      description: 'Developing high-performance Next.js applications and integrating enterprise APIs.'
     }
   ]);
 
   const [education, setEducation] = useState([
     {
       id: 1,
-      degree: 'Bachelor of Science in Engineering Sciences',
-      institution: 'GIKI Institute of Engineering Sciences and Technology',
-      location: 'Topi, KPK, Pakistan',
-      date: '2020 - 2024',
-      details: 'Graduated with Distinction. Specialization in Machine Learning, Software Architecture, and Data Analytics.'
+      degree: 'Bachelor of Science in Computer Science',
+      institution: 'GIKI Institute',
+      date: '2020 – 2024',
+      details: 'Graduated with Distinction. Focused on Machine Learning and Software Architecture.'
     }
   ]);
 
   const [skills, setSkills] = useState([
-    { id: 1, name: 'Python Programming' },
-    { id: 2, name: 'Machine Learning & AI' },
-    { id: 3, name: 'Next.js & React' },
-    { id: 4, name: 'Tailwind CSS' },
-    { id: 5, name: 'SQL & Database Management' },
-    { id: 6, name: 'Excel & Data Dashboards' }
+    { id: 1, name: 'React / Next.js' },
+    { id: 2, name: 'Python & Machine Learning' },
+    { id: 3, name: 'Tailwind CSS' }
   ]);
 
   const [languages, setLanguages] = useState([
     { id: 1, name: 'English', level: 'Professional Working' },
-    { id: 2, name: 'Pashto', level: 'Native' },
-    { id: 3, name: 'Urdu', level: 'Fluent' }
+    { id: 2, name: 'Pashto', level: 'Native' }
   ]);
 
   const [projects, setProjects] = useState([
@@ -59,29 +53,22 @@ export default function ResumeBuilder() {
       id: 1,
       title: 'AI Resume Builder Platform',
       role: 'Lead Developer',
-      description: 'Built a full-featured FlowCV clone using Next.js, Tailwind CSS, and Vercel.'
+      description: 'Built a full-featured FlowCV clone using Next.js, Tailwind, and Vercel.'
     }
-  ]);
-
-  const [certificates, setCertificates] = useState([
-    { id: 1, title: 'SAP ERP Fundamentals', issuer: 'TMC Academy', date: '2025' }
   ]);
 
   const [accentColor, setAccentColor] = useState('#4f46e5');
   const [activeTab, setActiveTab] = useState('personal');
 
-  // BULLETPROOF PRINT FUNCTION: Clones ONLY the CV element and opens isolated print view
+  // DYNAMIC BULLETPROOF PRINT FUNCTION: Generates PDF using your live inputs
   const handlePrint = () => {
-    const cvElement = document.getElementById('cv-print-area');
-    if (!cvElement) return;
-
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
       alert('Please allow popups to generate the PDF.');
       return;
     }
 
-    printWindow.document.write(`
+    const htmlContent = `
       <!DOCTYPE html>
       <html>
         <head>
@@ -90,38 +77,135 @@ export default function ResumeBuilder() {
           <style>
             @page {
               size: A4 portrait;
-              margin: 8mm;
+              margin: 10mm;
             }
             body {
               background: white;
               font-family: ui-sans-serif, system-ui, sans-serif;
-              padding: 0;
+              color: #111827;
+              padding: 10px;
               margin: 0;
             }
           </style>
         </head>
         <body>
-          <div style="width: 100%; max-width: 800px; margin: 0 auto;">
-            ${cvElement.innerHTML}
+          <div style="max-width: 800px; margin: 0 auto;">
+            <!-- Header -->
+            <div style="border-bottom: 2px solid ${accentColor}; padding-bottom: 16px; margin-bottom: 16px;">
+              <h1 style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">${personal.name}</h1>
+              <p style="font-size: 15px; font-weight: 700; color: ${accentColor}; margin: 4px 0 10px 0;">${personal.title}</p>
+              <div style="font-size: 12px; color: #4b5563; display: flex; flex-wrap: wrap; gap: 12px;">
+                ${personal.email ? `<span>📧 ${personal.email}</span>` : ''}
+                ${personal.phone ? `<span>📞 ${personal.phone}</span>` : ''}
+                ${personal.location ? `<span>📍 ${personal.location}</span>` : ''}
+                ${personal.website ? `<span>🌐 ${personal.website}</span>` : ''}
+              </div>
+            </div>
+
+            <!-- Summary -->
+            ${personal.summary ? `
+              <div style="margin-bottom: 16px;">
+                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 4px;">Professional Summary</h2>
+                <p style="font-size: 12px; color: #374151; line-height: 1.5; margin: 0;">${personal.summary}</p>
+              </div>
+            ` : ''}
+
+            <!-- Experience -->
+            ${experience.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 8px;">Professional Experience</h2>
+                ${experience.map(exp => `
+                  <div style="margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                      <h3 style="font-size: 12px; font-weight: 700; color: #111827; margin: 0;">${exp.role}</h3>
+                      <span style="font-size: 11px; font-weight: 600; color: #6b7280;">${exp.date}</span>
+                    </div>
+                    <p style="font-size: 12px; font-weight: 700; color: ${accentColor}; margin: 2px 0;">${exp.company}</p>
+                    <p style="font-size: 12px; color: #374151; margin: 2px 0 0 0;">${exp.description}</p>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Education -->
+            ${education.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 8px;">Education</h2>
+                ${education.map(edu => `
+                  <div style="margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                      <h3 style="font-size: 12px; font-weight: 700; color: #111827; margin: 0;">${edu.degree}</h3>
+                      <span style="font-size: 11px; font-weight: 600; color: #6b7280;">${edu.date}</span>
+                    </div>
+                    <p style="font-size: 12px; font-weight: 600; color: ${accentColor}; margin: 2px 0;">${edu.institution}</p>
+                    ${edu.details ? `<p style="font-size: 12px; color: #4b5563; margin: 2px 0 0 0;">${edu.details}</p>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Skills -->
+            ${skills.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 6px;">Skills</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  ${skills.map(skill => `
+                    <span style="background: #f3f4f6; border: 1px solid #e5e7eb; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; color: #1f2937;">${skill.name}</span>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Languages -->
+            ${languages.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 6px;">Languages</h2>
+                <div style="display: flex; gap: 16px; font-size: 12px; color: #374151;">
+                  ${languages.map(lang => `<span><strong>${lang.name}:</strong> ${lang.level}</span>`).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Projects -->
+            ${projects.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <h2 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: ${accentColor}; margin-bottom: 8px;">Key Projects</h2>
+                ${projects.map(proj => `
+                  <div style="margin-bottom: 8px;">
+                    <h3 style="font-size: 12px; font-weight: 700; color: #111827; margin: 0;">${proj.title}</h3>
+                    <p style="font-size: 12px; color: #374151; margin: 2px 0 0 0;">${proj.description}</p>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Declaration -->
+            <div style="margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 12px; text-align: center;">
+              <p style="font-size: 11px; color: #6b7280; font-style: italic; margin: 0;">
+                I hereby declare that all the information provided above is true and accurate to the best of my knowledge.
+              </p>
+            </div>
           </div>
           <script>
             setTimeout(() => {
               window.print();
               window.close();
-            }, 500);
+            }, 600);
           </script>
         </body>
       </html>
-    `);
+    `;
+
+    printWindow.document.write(htmlContent);
     printWindow.document.close();
   };
 
   const addExperience = () => {
-    setExperience([...experience, { id: Date.now(), role: '', company: '', location: '', date: '', description: '' }]);
+    setExperience([...experience, { id: Date.now(), role: '', company: '', date: '', description: '' }]);
   };
 
   const addEducation = () => {
-    setEducation([...education, { id: Date.now(), degree: '', institution: '', location: '', date: '', details: '' }]);
+    setEducation([...education, { id: Date.now(), degree: '', institution: '', date: '', details: '' }]);
   };
 
   const addSkill = () => {
@@ -308,23 +392,12 @@ export default function ResumeBuilder() {
                 ))}
               </div>
             )}
-
-            {activeTab === 'certs' && (
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold text-gray-800 border-b pb-2">Certifications</h3>
-                {certificates.map((cert, idx) => (
-                  <input key={cert.id} type="text" value={cert.title} onChange={(e) => {const u = [...certificates]; u[idx].title = e.target.value; setCertificates(u);}} className="border rounded p-2 text-xs w-full" />
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
-        {/* RESUME PREVIEW CANVAS */}
+        {/* LIVE RESUME PREVIEW CANVAS */}
         <div className="w-full lg:w-1/2 bg-slate-200 p-4 lg:p-8 flex justify-center items-start overflow-y-auto h-[calc(100vh-61px)]">
-          
           <div 
-            id="cv-print-area"
             className="bg-white w-full max-w-[800px] shadow-2xl p-8 text-gray-800 font-sans border border-gray-300"
           >
             
@@ -375,6 +448,7 @@ export default function ResumeBuilder() {
                       <span className="text-[10px] font-semibold text-gray-500">{edu.date}</span>
                     </div>
                     <p className="text-xs font-semibold" style={{ color: accentColor }}>{edu.institution}</p>
+                    {edu.details && <p className="text-xs text-gray-600 mt-0.5">{edu.details}</p>}
                   </div>
                 ))}
               </section>
